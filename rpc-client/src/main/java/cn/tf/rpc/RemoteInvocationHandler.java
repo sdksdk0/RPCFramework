@@ -1,5 +1,7 @@
 package cn.tf.rpc;
 
+import cn.tf.rpc.bean.RpcRequest;
+
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 
@@ -19,6 +21,7 @@ public class RemoteInvocationHandler implements InvocationHandler {
         rpcRequest.setClassName(method.getDeclaringClass().getName());
         rpcRequest.setMethodName(method.getName());
         rpcRequest.setParameters(args);
+        rpcRequest.setVersion("1.0");
 
         RpcNetTransport netTransport = new RpcNetTransport(host,port);
         Object result = netTransport.send(rpcRequest);

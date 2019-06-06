@@ -1,5 +1,7 @@
 package cn.tf.rpc;
 
+import cn.tf.rpc.bean.RpcRequest;
+
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;

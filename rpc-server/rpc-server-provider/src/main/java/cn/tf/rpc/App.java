@@ -13,7 +13,5 @@ public class App {
         ApplicationContext context = new AnnotationConfigApplicationContext(SpringConfig.class);
         ((AnnotationConfigApplicationContext) context).start();
 
-
-
     }
 }

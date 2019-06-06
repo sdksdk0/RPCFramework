@@ -1,5 +1,7 @@
 package cn.tf.rpc;
 
+import cn.tf.rpc.service.IHelloService;
+import cn.tf.rpc.service.IOrderService;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
@@ -20,6 +22,11 @@ public class App {
         );
         String result = iHelloService.sayHello("bbbb");
         System.out.println(result);
+
+        IOrderService orderService =rpcProxyClient.clientProxy(
+                IOrderService.class,"localhost",8080
+        );
+        System.out.println(orderService.queryOrderNewTop());
 
     }
 }

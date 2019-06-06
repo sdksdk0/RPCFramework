@@ -1,5 +1,6 @@
 package cn.tf.rpc;
 
+import cn.tf.rpc.handle.TFRpcServer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;

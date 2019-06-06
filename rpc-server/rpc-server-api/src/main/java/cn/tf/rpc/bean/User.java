@@ -1,4 +1,4 @@
-package cn.tf.rpc;
+package cn.tf.rpc.bean;
 
 public class User {
 

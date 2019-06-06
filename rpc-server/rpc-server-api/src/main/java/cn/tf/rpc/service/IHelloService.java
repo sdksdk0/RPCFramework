@@ -1,4 +1,6 @@
-package cn.tf.rpc;
+package cn.tf.rpc.service;
+
+import cn.tf.rpc.bean.User;
 
 public interface IHelloService {
 

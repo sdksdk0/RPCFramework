@@ -1,5 +1,7 @@
-package cn.tf.rpc;
+package cn.tf.rpc.handle;
 
+import cn.tf.rpc.bean.RpcRequest;
+import org.springframework.util.StringUtils;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -54,6 +56,11 @@ public class ProcessorHandler implements Runnable {
     private Object invoke(RpcRequest request) throws ClassNotFoundException, NoSuchMethodException, InvocationTargetException, IllegalAccessException {
 
         String serviceName = request.getClassName();
+        Class clazz = Class.forName(request.getClassName());
+        String version = request.getVersion();
+        if(!StringUtils.isEmpty(version)){
+            serviceName+="&"+version;
+        }
 
        Object service =  handleMap.get(serviceName);
         if(null == service){
@@ -61,14 +68,13 @@ public class ProcessorHandler implements Runnable {
         }
         //反射调用
         Object[] args = request.getParameters();
-        Class<?>[] types = new Class[args.length];
-        for (int i = 0; i < args.length; i++) {
-            types[i] = args[i].getClass();
+        Class<?>[] types = args!=null?new Class[args.length]:null;
+        if(args!=null){
+            for (int i = 0; i < args.length; i++) {
+                types[i] = args[i].getClass();
+            }
         }
-
-        Class clazz = Class.forName(request.getClassName());
         Method method = clazz.getMethod(request.getMethodName(), types);
         return method.invoke(service,args);
-
     }
 }

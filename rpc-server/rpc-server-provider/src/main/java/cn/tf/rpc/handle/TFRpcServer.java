@@ -1,4 +1,4 @@
-package cn.tf.rpc;
+package cn.tf.rpc.handle;
 
 import cn.tf.rpc.annotation.RpcService;
 import org.springframework.beans.BeansException;
@@ -6,6 +6,7 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -62,7 +63,11 @@ public class TFRpcServer implements ApplicationContextAware,InitializingBean {
             for (Object serviceBean : serviceBeanMap.values()){
                 //拿到注解
                 RpcService rpcService = serviceBean.getClass().getAnnotation(RpcService.class);
-                String serviceName = rpcService.value().getName();
+                String serviceName = rpcService.value().getName(); //接口类定义
+                String version = rpcService.version(); //版本号
+                if(!StringUtils.isEmpty(version)){
+                    serviceName+="&"+version;
+                }
                 handleMap.put(serviceName,serviceBean);
             }
         }
