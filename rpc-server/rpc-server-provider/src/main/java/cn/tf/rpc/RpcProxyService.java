@@ -8,7 +8,7 @@ import java.util.concurrent.Executors;
 
 public class RpcProxyService {
 
-    ExecutorService executorService = Executors.newCachedThreadPool();
+   /* ExecutorService executorService = Executors.newCachedThreadPool();
 
 
     //暴露服务
@@ -35,6 +35,6 @@ public class RpcProxyService {
             }
         }
     }
-
+*/
 
 }

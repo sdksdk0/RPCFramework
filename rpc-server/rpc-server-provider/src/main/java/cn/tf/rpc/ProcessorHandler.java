@@ -6,15 +6,16 @@ import java.io.ObjectOutputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.Socket;
+import java.util.Map;
 
 public class ProcessorHandler implements Runnable {
 
     private Socket socket;
-    private Object services;
+    private Map<String,Object> handleMap;
 
-    public ProcessorHandler(Socket socket, Object services) {
+    public ProcessorHandler(Socket socket, Map<String,Object> handleMap) {
         this.socket = socket;
-        this.services = services;
+        this.handleMap = handleMap;
     }
 
     @Override
@@ -24,14 +25,11 @@ public class ProcessorHandler implements Runnable {
 
         try {
             ois = new ObjectInputStream(socket.getInputStream());
-
-
             RpcRequest rpcRequest = (RpcRequest) ois.readObject();
             Object result = invoke(rpcRequest);
             oos = new ObjectOutputStream(socket.getOutputStream());
             oos.writeObject(result);
             oos.flush();
-
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -51,33 +49,26 @@ public class ProcessorHandler implements Runnable {
                 }
             }
         }
-
     }
 
-    private Object invoke(RpcRequest request) {
+    private Object invoke(RpcRequest request) throws ClassNotFoundException, NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+
+        String serviceName = request.getClassName();
+
+       Object service =  handleMap.get(serviceName);
+        if(null == service){
+            throw  new RuntimeException("service not found:"+service);
+        }
         //反射调用
         Object[] args = request.getParameters();
         Class<?>[] types = new Class[args.length];
         for (int i = 0; i < args.length; i++) {
             types[i] = args[i].getClass();
         }
-        try {
-            Class clazz = Class.forName(request.getClassName());
-            Method method = clazz.getMethod(request.getMethodName(), types);
-            return method.invoke(services,args);
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        } catch (NoSuchMethodException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
-        }
-        return null;
+
+        Class clazz = Class.forName(request.getClassName());
+        Method method = clazz.getMethod(request.getMethodName(), types);
+        return method.invoke(service,args);
+
     }
-
-
-
-
 }

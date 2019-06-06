@@ -1,7 +1,9 @@
 package cn.tf.rpc;
 
-public class HelloServiceImpl implements IHelloService {
+import cn.tf.rpc.annotation.RpcService;
 
+@RpcService(IHelloService.class)
+public class HelloServiceImpl implements IHelloService {
 
     @Override
     public String sayHello(String content) {
