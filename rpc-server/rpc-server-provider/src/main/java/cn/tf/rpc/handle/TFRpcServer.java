@@ -1,6 +1,8 @@
 package cn.tf.rpc.handle;
 
 import cn.tf.rpc.annotation.RpcService;
+import cn.tf.rpc.registry.IRegistryCenter;
+import cn.tf.rpc.registry.RegistryCenterWithZk;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.ApplicationContext;
@@ -9,8 +11,10 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 import java.io.IOException;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.UnknownHostException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
@@ -24,9 +28,11 @@ public class TFRpcServer implements ApplicationContextAware,InitializingBean {
 
     private Map<String,Object> handleMap = new HashMap<>();
     private int port;
+    private IRegistryCenter iRegistryCenter =null;
 
-    public TFRpcServer(int port) {
+    public TFRpcServer(int port, IRegistryCenter iRegistryCenter) {
         this.port = port;
+        this.iRegistryCenter = iRegistryCenter;
     }
 
     @Override
@@ -69,7 +75,20 @@ public class TFRpcServer implements ApplicationContextAware,InitializingBean {
                     serviceName+="&"+version;
                 }
                 handleMap.put(serviceName,serviceBean);
+                iRegistryCenter.registry(serviceName,getAddress()+":"+port);
             }
         }
     }
+
+    private static String getAddress(){
+        InetAddress inetAddress = null;
+        try {
+            inetAddress = InetAddress.getLocalHost();
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        }
+        return inetAddress.getHostAddress();
+    }
+
+
 }

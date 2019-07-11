@@ -1,5 +1,6 @@
 package cn.tf.rpc;
 
+import cn.tf.rpc.config.SpringConfig;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 

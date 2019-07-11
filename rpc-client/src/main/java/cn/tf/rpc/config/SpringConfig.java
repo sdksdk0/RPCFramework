@@ -1,5 +1,6 @@
-package cn.tf.rpc;
+package cn.tf.rpc.config;
 
+import cn.tf.rpc.handler.RpcProxyClient;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 

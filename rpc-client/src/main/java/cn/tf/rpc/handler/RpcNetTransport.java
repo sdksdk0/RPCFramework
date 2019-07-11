@@ -1,4 +1,4 @@
-package cn.tf.rpc;
+package cn.tf.rpc.handler;
 
 import cn.tf.rpc.bean.RpcRequest;
 
@@ -12,12 +12,10 @@ import java.net.Socket;
  */
 public class RpcNetTransport {
 
-    private String host;
-    private int port;
+    private String serviceAddress;
 
-    public RpcNetTransport(String host, int port) {
-        this.host = host;
-        this.port = port;
+    public RpcNetTransport(String serviceAddress) {
+        this.serviceAddress = serviceAddress;
     }
 
     public Object send(RpcRequest request){
@@ -27,7 +25,9 @@ public class RpcNetTransport {
         ObjectInputStream inputStream = null;
 
         try {
-            socket = new Socket(host,port);
+
+            String urls[]=serviceAddress.split(":");
+            socket = new Socket(urls[0],Integer.parseInt(urls[1]));
 
             outputStream = new ObjectOutputStream(socket.getOutputStream());
             outputStream.writeObject(request);
